@@ -165,10 +165,9 @@ case $1 in
   ;;
   *)
   if [ -a "$THIS_DIR"/bot-"$1".lua ]; then
-    sudo service redis-server restart
-    #while true; do
+    while true; do
       ./telegram-cli -p bot-"$1" -s bot-"$1".lua
-    #done
+    done
     else
       usage
   fi
