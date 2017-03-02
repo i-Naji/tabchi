@@ -162,7 +162,7 @@ function tdcli_update_callback(data)
 					}, dl_cb, nil)
 					rem(matches[2])
 				elseif text:match("^بروزرسانی ربات$") then
-					io.popen("git fetch --all && git reset --hard origin/persian && git pull origin persian"):read("*all")
+					io.popen("git fetch --all && git reset --hard origin/persian && git pull origin persian && chmod +x bot"):read("*all")
 					local text,ok = io.open("bot.lua",'r'):read('*a'):gsub("BOT%-ID",BOT-ID)
 					io.open("bot-BOT-ID.lua",'w'):write(text):close()
 					loadfile("./bot-BOT-ID.lua")()
@@ -182,7 +182,7 @@ function tdcli_update_callback(data)
 					send(msg.chat_id_, msg.id_, "<b>همگام سازی اطلاعات با تبچی شماره</b><code> "..tostring(botid).." </code><b>انجام شد.</b>")
 				end
 				if tostring(msg.chat_id_):match("^-") then
-					if text:match("^(افزودن گروه مدیریت)$") then
+					if text:match("^(تنظیم گروه مدیریت)$") then
 						redis:set('botBOT-IDrealm', msg.chat_id_)
 						send(msg.chat_id_, msg.id_, '<i>گروه مدیریتی ثبت شد</i>')
 					elseif text:match("^(ترک کردن)$") then
