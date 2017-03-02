@@ -36,7 +36,7 @@ create() {
       name=$name-$i
   fi
   cat bot.lua >> "$name".lua
-  sed -i 's/BOTID/'$i'/g' "$name".lua
+  sed -i 's/BOT-ID/'$i'/g' "$name".lua
     prtgrn "
      ربات شماره "$1" ساخته شد <<
   : رباتتان را با فرمان زیر اجرا کنید
