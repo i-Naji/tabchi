@@ -1,0 +1,176 @@
+#!/usr/bin/env bash
+
+## VARIABLES
+THIS_DIR=$(cd "$(dirname "$0")"; pwd)
+TDCLI='https://valtman.name/files/telegram-cli-1222'
+
+## Print Colorful
+# Print text in red
+prtred() {
+  printf '\e[1;31m%s\n\e[0;39;49m' "$@"
+}
+# Print text in green
+prtgrn() {
+  printf '\e[1;32m%s\n\e[0;39;49m' "$@"
+}
+# Print text in brown
+prtbrown() {
+  printf '\e[1;33m%s\n\e[0;39;49m' "$@"
+}
+# update data to the last version
+update() {
+  git pull -f
+    prtgrn "
+      بروزرسانی اطلاعات با موفقیت انجام شد <<
+  >> Bot's source successfully updated
+"
+}
+# Create a new Bot
+create() {
+  name=bot
+  if [[ -e $name.lua ]] ; then
+      i=1
+      while [[ -e $name-$i.lua ]] ; do
+          let i++
+      done
+      name=$name-$i
+  fi
+  cat bot.lua >> "$name".lua
+  sed -i 's/BOTID/'$i'/g' "$name".lua
+    prtgrn "
+     ربات شماره "$1" ساخته شد <<
+  : رباتتان را با فرمان زیر اجرا کنید
+>> new bot seccessfuly created
+       bot number "$i"
+      run your bot by :"
+prtred "
+       ./bot "$i"
+"
+}
+# Reset data to the last update
+fix() {
+  git reset --hard FETCH_HEAD
+  prtgrn '
+  بازیابی اطلاعات به آخرین آپدیت انجام شد <<
+  >> Database Reseted and Fixed
+'
+}
+# install Bot
+install() {
+  prtgrn '
+         آیا قصد نصب پیش نیاز های ربات تبلیغگر را دارید؟ بله|خیر <<
+  >> Do you want to install Essentials of Tabchi bot? (Y/N):
+'
+  read -rp ' ' install
+  case "$install" in
+    Y|y|بله)
+      prtgrn "
+         telegram-cli بارگیری <<
+ >> Fetching $TDCLI
+"
+      wget "$TDCLI" -O telegram-cli
+      sudo chmod +x telegram-cli
+      prtgrn "
+     ارتقای اطلاعات قدیمی <<
+ >> Updating old packages
+"
+      sudo apt-get -y update && sudo apt-get -y upgrade 
+      prtgrn "
+        نصب بسته های پیش نیازی <<
+ >> Installing Essentials packages
+"
+      sudo apt-get --force-yes install git wget screen tmux libconfig9 libevent-dev libjansson4 libstdc++6 lua-socket lua5.2 liblua5.2 make unzip redis-server software-properties-common g++
+      sudo apt-get -y update && sudo apt-get -y upgrade
+      sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && sudo apt-get update && sudo apt-get install -y gcc-4.9 g++-4.9 && sudo update-alternatives —install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 —slave /usr/bin/g++ g++ /usr/bin/g++-4.9
+      prtgrn "
+ ارتقای بسته های نصب شده <<
+ >> Updating packages
+"
+      sudo apt-get -y update && sudo apt-get -y upgrade && sudo apt-get -y dist-upgrade && sudo apt-get -y autoremove
+      prtgrn "
+      redis راه اندازی مجدد  <<
+ >> Restarting redis service
+"
+      sudo service redis-server restart
+      prtgrn '
+      همگام سازی با جدیدترین نسخه تبلیغگر << 
+ >> Fetching latest Bot source code
+ '
+      git pull
+      prtgrn '
+      نصب پیش نیاز های ربات تبلیغگر با موفقیت انجام شد << 
+ >> Essentials of Tablighgar Bot successfully installed!
+ '
+      printf '\e[1;33mبسازید\e[1;32m ./bot create \e[1;33mربات تبلیغگر خود را با دستور <<\e[1;33m%s\n >>Create Your bot with\e[1;32m ./bot create\e[0;39;49m%s\n'
+    ;;
+    N|n|خیر)
+      prtbrown '
+        لغو عملیات
+ Canceling the operation
+ '
+    ;;
+    *)
+      prtred '
+    دستور اشتباه
+  Wrong command
+ '
+      install
+    ;;
+  esac
+}
+# How to use this script
+usage() {
+printf "\e[1;36m"
+  cat <<EOF
+  
+                    $0 [موارد استفاده  : [گزینه ها <<
+                                        : گزینه ها
+        شماره             راه اندازی ربات با این شماره 
+   بازیابی اطلاعات از اخرین بروزرسانی             fix
+    نصب پیش نیاز های ربات تبلیغ گر           install
+      بروزرسانی به آخرین نسخه ربات            update
+                 ساخت ربات جدید           create
+                  نمایش این متن             help
+                  
+>> Usage: $0 [options]
+    Options:
+      unmber            Start bot whit this ID number
+      install           Install of Tabchi Bot
+      create            Create a new Tabchi Bot
+      update            Update bot source code
+      help              Print this message
+      fix               Reseting data
+EOF
+printf "%s\n\e[0;39;49m"
+}
+## MAIN ------------------------------------------------------------------------
+# Make sure this script run inside Bot directory
+cd "$THIS_DIR" || exit
+
+case $1 in
+  update)
+    update
+  ;;
+  create)
+    create
+  ;;
+  install)
+    install
+  ;;
+  fix)
+    fix
+  ;;
+  help)
+    usage
+  ;;
+  *)
+  if [ -a "$THIS_DIR"/bot-"$1".lua ]; then
+    sudo service redis-server restart
+    #while true; do
+      ./telegram-cli -p bot-"$1" -s bot-"$1".lua
+    #done
+    else
+      usage
+  fi
+  ;;
+esac
