@@ -162,11 +162,11 @@ function tdcli_update_callback(data)
 					}, dl_cb, nil)
 					rem(matches[2])
 				elseif text:match("^بروزرسانی ربات$") then
+					send(msg.chat_id_, msg.id_, "<i>تبلیغ‌گر با موفقیت </i><code>بروزرسانی</cdoe><i> شد</i>")
 					io.popen("git fetch --all && git reset --hard origin/persian && git pull origin persian && chmod +x bot"):read("*all")
 					local text,ok = io.open("bot.lua",'r'):read('*a'):gsub("BOT%-ID",BOT-ID)
 					io.open("bot-BOT-ID.lua",'w'):write(text):close()
 					loadfile("./bot-BOT-ID.lua")()
-					send(msg.chat_id_, msg.id_, "<i>تبلیغ گر با موفقیت </i><code>بروزرسانی</cdoe><i> شد</i>")
 				elseif text:match("^همگام سازی با تبچی$") then
 					local botid = BOT-ID - 1
 					--redis:del("botBOT-IDall")
