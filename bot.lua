@@ -38,6 +38,12 @@ function get_bot (i, naji)
 	tdcli_function ({ID = "GetMe",}, bot_info, nil)
 end
 
+function reload(chat_id,msg_id)
+	loadfile("./bot-BOT-ID.lua")()
+	send(chat_id, msg_id, "<i>با موفقیت انجام شد.</i>")
+end
+
+
 function writefile(filename, input)
 	local file = io.open(filename, "w")
 	file:write(input)
@@ -149,8 +155,7 @@ function tdcli_update_callback(data)
 					redis:set("botBOT-IDadmin", matches[2])
 					send(msg.chat_id_, msg.id_, "<i>ادمین ربات با موفقیت تغییر کرد</i>")
 				elseif text:match("^(/reload)$") then
-					loadfile("./bot-BOT-ID.lua")()
-					send(msg.chat_id_, msg.id_, "<i>بارگذاری مجدد انجام شد</i>")
+					reload(msg.chat_id_,msg.id_)
 				elseif text:match("^(ترک کردن) (.*)$") then
 					local matches = {string.match(text, "^(ترک گروه) (.*)$")} 	
 					send(msg.chat_id_, msg.id_, 'گروه ترک شد')
@@ -162,11 +167,10 @@ function tdcli_update_callback(data)
 					}, dl_cb, nil)
 					rem(matches[2])
 				elseif text:match("^بروزرسانی ربات$") then
-					send(msg.chat_id_, msg.id_, "<i>تبلیغ‌گر با موفقیت </i><code>بروزرسانی</cdoe><i> شد</i>")
 					io.popen("git fetch --all && git reset --hard origin/persian && git pull origin persian && chmod +x bot"):read("*all")
 					local text,ok = io.open("bot.lua",'r'):read('*a'):gsub("BOT%-ID",BOT-ID)
 					io.open("bot-BOT-ID.lua",'w'):write(text):close()
-					loadfile("./bot-BOT-ID.lua")()
+					reload(msg.chat_id_,msg.id_)
 				elseif text:match("^همگام سازی با تبچی$") then
 					local botid = BOT-ID - 1
 					--redis:del("botBOT-IDall")
