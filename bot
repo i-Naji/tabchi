@@ -69,7 +69,7 @@ install() {
  >> Fetching $TDCLI
 "
       wget "$TDCLI" -O telegram-cli
-      sudo chmod +x telegram-cli
+      chmod +x telegram-cli
       prtgrn "
      ارتقای اطلاعات قدیمی <<
  >> Updating old packages
