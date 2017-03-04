@@ -289,7 +289,6 @@ function tdcli_update_callback(data)
 						caption_ = "لیست "..tostring(matches[2]).." های تبلیغ گر شماره BOT-ID"}
 					}, dl_cb, nil)
 					return io.popen("rm -rf "..tostring(naji)..".txt"):read("*all")
-					end
 				elseif text:match("^(وضعیت مشاهده) (.*)$") then
 					local matches = {text:match("^(وضعیت پیام) (.*)$")}
 					if matches[2] == "روشن" then
