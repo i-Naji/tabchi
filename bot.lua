@@ -290,7 +290,7 @@ function tdcli_update_callback(data)
 					}, dl_cb, nil)
 					return io.popen("rm -rf "..tostring(naji)..".txt"):read("*all")
 				elseif text:match("^(وضعیت مشاهده) (.*)$") then
-					local matches = {text:match("^(وضعیت پیام) (.*)$")}
+					local matches = {text:match("^(وضعیت مشاهده) (.*)$")}
 					if matches[2] == "روشن" then
 						redis:set("botBOT-IDmarkread", true)
 						send(msg.chat_id_, msg.id_, "<i>وضعیت پیام ها >> خوانده شده ✔️✔️\n</i><code>(تیک دوم فعال)</code>")
