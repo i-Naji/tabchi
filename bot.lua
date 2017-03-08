@@ -242,6 +242,14 @@ function tdcli_update_callback(data)
 							}, dl_cb, nil)
 							return io.popen("rm -rf botBOT-ID_contacts.txt"):read("*all")
 						end, {chat_id = msg.chat_id_})
+					elseif matches[2] == "پاسخ های خودکار" then
+						local text = "<i>لیست پاسخ های خودکار :</i>\n\n"
+						local answers = redis:smembers("botBOT-IDanswerslist")
+						for k,v in pairs(answers) do
+							text = tostring(text) .. "<i>l" .. tostring(k) .. "l</i>  " .. tostring(v) .. " : " .. tostring(redis:hget("botBOT-IDanswers", v)) .. "\n"
+						end
+						if redis:scard('botBOT-IDanswerslist') == 0  then text = tostring(text) ..  "<code>       EMPTY</code>" end
+						return send(msg.chat_id_, msg.id_, text)
 					elseif matches[2] == "مسدود" then
 						naji = "botBOT-IDblockedusers"
 					elseif matches[2] == "شخصی" then
