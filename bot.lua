@@ -387,8 +387,8 @@ function tdcli_update_callback(data)
 						}, dl_cb, nil)
 					end
 					send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>")
-				elseif (text:match("^(فرستادن به سوپرگروه) (.*)")) then
-					local matches = {text:match("^(فرستادن به سوپرگروه) (.*)")}
+				elseif (text:match("^(ارسال به سوپرگروه) (.*)")) then
+					local matches = {text:match("^(ارسال به سوپرگروه) (.*)")}
 					local dir = redis:smembers("botBOT-IDsupergroups")
 					for i, v in pairs(dir) do
 						tdcli_function ({
@@ -499,6 +499,8 @@ function tdcli_update_callback(data)
 						disable_notification_ = 1,
 						from_background_ = 1
 					}, dl_cb, nil)
+				elseif (text:match("^(راهنما)$") and not msg.forward_info_)then
+					send(msg.chat_id_,msg.id_, "راهنمای تبلیغ‌گر :  \nhttps://telegram.me/i_advertiser/15")
 				end
 			end
 			if redis:sismember("botBOT-IDanswerslist", text) then
