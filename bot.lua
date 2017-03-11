@@ -145,7 +145,7 @@ function tdcli_update_callback(data)
 					redis:del('botBOT-IDrealm')
 					send(msg.chat_id_, msg.id_, "<i>گروه مدیریتی حذف شد</i>")
 				elseif text:match("^(تنظیم مدیر) (%d+)$") then
-					local matches = {string.match(text, "^(افزودن مدیر) (%d+)$")} 	
+					local matches = {string.match(text, "^(تنظیم مدیر) (%d+)$")} 	
 					redis:set("botBOT-IDadmin", matches[2])
 					send(msg.chat_id_, msg.id_, "<i>ادمین ربات با موفقیت تغییر کرد</i>")
 				elseif text:match("^(/reload)$") then
