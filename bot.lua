@@ -47,20 +47,19 @@ function writefile(filename, input)
 end
 
 function process_link(text)
-	if text:match("https://telegram.me/joinchat/%S+") or text:match("https://t.me/joinchat/%S+") then
-    local text = text:gsub("t.me", "telegram.me")
-    local matches = {text:match("(https://telegram.me/joinchat/%S+)")}
-    for i, v in pairs(matches) do
-		tdcli_function({ID = "CheckChatInviteLink",invite_link_ = v},
-		function (i, naji)
-			if naji.is_group_ or naji.is_supergroup_channel_ then
-			redis:sadd("botBOT-IDsavedlinks", i.link)
-			tdcli_function ({ID = "ImportChatInviteLink",invite_link_ = i.link}, dl_cb, nil)
-			end
-		end,
-		{link = v})
-		return true
-    end
+	if text:match("https://telegram.me/joinchat/%S+") or text:match("https://t.me/joinchat/%S+") or text:match("https://telegram.dog/joinchat/%S+") 
+    		local text = text:gsub("t.me", "telegram.me")
+    		local text = text:gsub("telegram.dog", "telegram.me")
+		for link in text:gmatch("(https://telegram.me/joinchat/%S+)") do
+			tdcli_function({ID = "CheckChatInviteLink",invite_link_ = link},
+			function (i, naji)
+				if naji.is_group_ or naji.is_supergroup_channel_ then
+					redis:sadd("botBOT-IDsavedlinks", i.link)
+					tdcli_function ({ID = "ImportChatInviteLink",invite_link_ = i.link}, dl_cb, nil)
+				end
+			end,
+			{link = link})
+    		end
 	end
 end
 function add(id)
