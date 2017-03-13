@@ -55,6 +55,23 @@ fix() {
   >> Database Reseted and Fixed
 '
 }
+# autolauncher
+autolaunch() {
+  while true ; do
+    for tablighgar in bot-*.lua ; do
+      tab="${tablighgar%.*}"
+      ltab="${tab/-/ }"
+      tmux kill-session -t $tab
+      for tg in ~/.telegram-cli/$tab/data/* ; do
+        rm -rf $tg/*
+      done
+      TMUX= tmux new-session -d -s $tab "./$ltab"
+      tmux detach -s $tab
+    done
+    printf '\n\e[1;32mربات ها راه اندازی شدند << \e[1;34m|Naji| \e[1;32m>> Bots are Running\n\e[0;39;49m'
+    sleep 1800
+  done 
+}
 # install Bot
 install() {
   prtgrn '
@@ -159,6 +176,9 @@ case $1 in
   ;;
   fix)
     fix
+  ;;
+  autolaunch)
+    autolaunch
   ;;
   help)
     usage
