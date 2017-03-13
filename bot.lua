@@ -473,7 +473,7 @@ function tdcli_update_callback(data)
 					local matches = {string.match(text, "^(افزودن به همه) (%d+)$")} 	
 					local gp = redis:smembers("botBOT-IDgroups")
 					local sgp = redis:smembers("botBOT-IDsupergroups")
-					for i, v in pairs(gps) do 
+					for i, v in pairs(gp) do 
 						tdcli_function ({
 							ID = "AddChatMember",
 							chat_id_ = v,
@@ -481,7 +481,7 @@ function tdcli_update_callback(data)
 							forward_limit_ =  50
 						}, dl_cb, nil)
 					end
-					for i, v in pairs(sgps) do
+					for i, v in pairs(sgp) do
 						tdcli_function ({
 						ID = "AddChatMember",
 						chat_id_ = v,
