@@ -81,7 +81,7 @@ function find_link(text)
 		local text = text:gsub("telegram.dog", "telegram.me")
 		for link in text:gmatch("(https://telegram.me/joinchat/%S+)") do
 			print("newlink")
-			if  (not redis:sismember("botBOT-IDsavedlinks", link or not redis:sismember("botBOT-IDwaitelinks", link)) then
+			if  (not redis:sismember("botBOT-IDsavedlinks", link) or not redis:sismember("botBOT-IDwaitelinks", link) or not redis:sismember("botBOT-IDgoodlinks", link)) then
 				redis:sadd("botBOT-IDwaitelinks", link)
 			end
 		end
