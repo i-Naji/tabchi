@@ -58,7 +58,6 @@ function process_join(i, naji)
 		local Time = message:match('%d+')
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
-		print("join_ok")
 		redis:srem("botBOT-IDgoodlinks", i.link)
 		redis:sadd("botBOT-IDsavedlinks", i.link)
 	end
@@ -73,7 +72,6 @@ function process_link(i, naji)
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDwaitelinks", i.link)
-		redis:srem("botBOT-IDsavedlinks", i.link)
 	end
 end
 function find_link(text)
@@ -81,7 +79,6 @@ function find_link(text)
 		local text = text:gsub("t.me", "telegram.me")
 		local text = text:gsub("telegram.dog", "telegram.me")
 		for link in text:gmatch("(https://telegram.me/joinchat/%S+)") do
-			print("newlink")
 			if not redis:sismember("botBOT-IDalllinks", link) then
 				redis:sadd("botBOT-IDwaitelinks", link)
 				redis:sadd("botBOT-IDalllinks", link)
