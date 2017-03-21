@@ -188,47 +188,47 @@ function tdcli_update_callback(data)
 			if is_naji(msg) then
 				if text:match("^(افزودن مدیر) (%d+)$") then
 					local matches = text:match("%d+")
-					if redis:sismember('bot2admin', matches) then
+					if redis:sismember('botBOT-IDadmin', matches) then
 						return send(msg.chat_id_, msg.id_, "<i>کاربر مورد نظر در حال حاضر مدیر است.</i>")
-					elseif redis:sismember('bot2mod', msg.sender_user_id_) then
+					elseif redis:sismember('botBOT-IDmod', msg.sender_user_id_) then
 						return send(msg.chat_id_, msg.id_, "شما دسترسی ندارید.")
 					else
-						redis:sadd('bot2admin', matches)
-						redis:sadd('bot2mod', matches)
+						redis:sadd('botBOT-IDadmin', matches)
+						redis:sadd('botBOT-IDmod', matches)
 						return send(msg.chat_id_, msg.id_, "<i>مقام کاربر به مدیر ارتقا یافت</i>")
 					end
 				elseif text:match("^(افزودن مدیرکل) (%d+)$") then
 					local matches = text:match("%d+")
-					if redis:sismember('bot2mod',msg.sender_user_id_) then
+					if redis:sismember('botBOT-IDmod',msg.sender_user_id_) then
 						return send(msg.chat_id_, msg.id_, "شما دسترسی ندارید.")
 					end
-					if redis:sismember('bot2mod', matches) then
-						redis:srem("bot2mod",matches)
-						redis:sadd('bot2admin'..tostring(matches),msg.sender_user_id_)
+					if redis:sismember('botBOT-IDmod', matches) then
+						redis:srem("botBOT-IDmod",matches)
+						redis:sadd('botBOT-IDadmin'..tostring(matches),msg.sender_user_id_)
 						return send(msg.chat_id_, msg.id_, "مقام کاربر به مدیریت کل ارتقا یافت .")
-					elseif redis:sismember('bot2admin',matches) then
+					elseif redis:sismember('botBOT-IDadmin',matches) then
 						return send(msg.chat_id_, msg.id_, 'درحال حاضر مدیر هستند.')
 					else
-						redis:sadd('bot2admin', matches)
-						redis:sadd('bot2admin'..tostring(matches),msg.sender_user_id_)
+						redis:sadd('botBOT-IDadmin', matches)
+						redis:sadd('botBOT-IDadmin'..tostring(matches),msg.sender_user_id_)
 						return send(msg.chat_id_, msg.id_, "کاربر به مقام مدیرکل منصوب شد.")
 					end
 				elseif text:match("^(حذف مدیر) (%d+)$") then
 					local matches = text:match("%d+")
-					if redis:sismember('bot2mod', msg.sender_user_id_) then
+					if redis:sismember('botBOT-IDmod', msg.sender_user_id_) then
 						if tonumber(matches) == msg.sender_user_id_ then
-								redis:srem('bot2admin', msg.sender_user_id_)
-								redis:srem('bot2mod', msg.sender_user_id_)
+								redis:srem('botBOT-IDadmin', msg.sender_user_id_)
+								redis:srem('botBOT-IDmod', msg.sender_user_id_)
 							return send(msg.chat_id_, msg.id_, "شما دیگر مدیر نیستید.")
 						end
 						return send(msg.chat_id_, msg.id_, "شما دسترسی ندارید.")
 					end
-					if redis:sismember('bot2admin', matches) then
-						if  redis:sismember('bot2admin'..msg.sender_user_id_ ,matches) then
+					if redis:sismember('botBOT-IDadmin', matches) then
+						if  redis:sismember('botBOT-IDadmin'..msg.sender_user_id_ ,matches) then
 							return send(msg.chat_id_, msg.id_, "شما نمی توانید مدیری که به شما مقام داده را عزل کنید.")
 						end
-						redis:srem('bot2admin', matches)
-						redis:srem('bot2mod', matches)
+						redis:srem('botBOT-IDadmin', matches)
+						redis:srem('botBOT-IDmod', matches)
 						return send(msg.chat_id_, msg.id_, "کاربر از مقام مدیریت خلع شد.")
 					end
 					return send(msg.chat_id_, msg.id_, "کاربر مورد نظر مدیر نمی باشد.")
@@ -253,9 +253,9 @@ function tdcli_update_callback(data)
 					local botid = BOT-ID - 1
 					redis:sunionstore("botBOT-IDall","tabchi:"..tostring(botid)..":all")
 					redis:sunionstore("botBOT-IDusers","tabchi:"..tostring(botid)..":pvis")
-					redis:sunionstore("bot1groups","tabchi:"..tostring(botid)..":groups")
-					redis:sunionstore("bot1supergroups","tabchi:"..tostring(botid)..":channels")
-					redis:sunionstore("bot1savedlinks","tabchi:"..tostring(botid)..":savedlinks")
+					redis:sunionstore("botBOT-IDgroups","tabchi:"..tostring(botid)..":groups")
+					redis:sunionstore("botBOT-IDsupergroups","tabchi:"..tostring(botid)..":channels")
+					redis:sunionstore("botBOT-IDsavedlinks","tabchi:"..tostring(botid)..":savedlinks")
 					return send(msg.chat_id_, msg.id_, "<b>همگام سازی اطلاعات با تبچی شماره</b><code> "..tostring(botid).." </code><b>انجام شد.</b>")
 				elseif text:match("^(لیست) (.*)$") then
 					local matches = text:match("^لیست (.*)$")
@@ -409,8 +409,8 @@ function tdcli_update_callback(data)
 					local s = redis:get("botBOT-IDmaxjoin") and redis:ttl("botBOT-IDmaxjoin") or 0
 					local ss = redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
 					local msgadd = redis:get("botBOT-IDaddmsg") and "☑️" or "❎"
-					local numadd = redis:get("bot3addcontact") and "✅" or "❎"
-					local txtadd = redis:get("bot3addmsgtext") or  "اد‌دی گلم خصوصی پیام بده"
+					local numadd = redis:get("botBOT-IDaddcontact") and "✅" or "❎"
+					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "اد‌دی گلم خصوصی پیام بده"
 					local autoanswer = redis:get("botBOT-IDautoanswer") and "✅" or "❎"
 					local wlinks = redis:scard("botBOT-IDwaitelinks")
 					local glinks = redis:scard("botBOT-IDgoodlinks")
