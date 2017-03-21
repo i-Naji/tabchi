@@ -310,7 +310,7 @@ function tdcli_update_callback(data)
 					elseif matches == "لینک" then
 						naji = "botBOT-IDsavedlinks"
 					elseif matches == "مدیر" then
-						naji = "bot2admin"
+						naji = "botBOT-IDadmin"
 					else
 						return true
 					end
