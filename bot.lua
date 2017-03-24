@@ -178,7 +178,7 @@ function tdcli_update_callback(data)
 			end
 		end
 		add(msg.chat_id_)
-		if msg.date_ < os.time() - 5 then
+		if msg.date_ < os.time() - 45 then
 			return false
 		end
 		if msg.content_.ID == "MessageText" then
