@@ -19,7 +19,7 @@ prtbrown() {
 }
 # update data to the last version
 update() {
-  git pull -f
+  git fetch --all && git reset --hard origin/persian && git pull origin persian && chmod +x bot
     prtgrn "
       بروزرسانی اطلاعات با موفقیت انجام شد <<
   >> Bot's source successfully updated
@@ -38,7 +38,7 @@ create() {
   cat bot.lua >> "$name".lua
   sed -i 's/BOT-ID/'$i'/g' "$name".lua
     prtgrn "
-     ربات شماره "$1" ساخته شد <<
+     ربات شماره "$i" ساخته شد <<
   : رباتتان را با فرمان زیر اجرا کنید
 >> new bot seccessfuly created
        bot number "$i"
@@ -46,6 +46,41 @@ create() {
 prtred "
        ./bot "$i"
 "
+}
+# Create a new Bot manually
+createmanual() {
+   prtgrn '
+        برای ساخت ربات با شماره دلخواه، شماره دلخواه خود را وارد کنید <<
+  >> To creating a new bot manually, Inter the BOT-ID :
+'
+  read -rp ' ' ID
+    if [[ -e bot-"$ID".lua ]] ; then
+      prtred '
+     شماره ربات وارد شده از قبل وجود دارد <<
+  >> There is a bot with this number ID
+'
+      exit
+    else
+      if [[ "$ID" =~ ^[0-9]+$ ]] ; then
+        cat bot.lua >> bot-"$ID".lua
+        sed -i 's/BOT-ID/'$ID'/g' bot-"$ID".lua
+        prtgrn "
+     ربات شماره "$ID" ساخته شد <<
+    : رباتتان را با فرمان زیر اجرا کنید
+  >> new bot seccessfuly created
+       bot number "$ID"
+      run your bot by :"
+        prtred "
+             ./bot "$ID"
+      "
+      else
+        prtred "
+     شماره ربات را وارد کنید -- عدد
+  Inter the bot number --integer
+    "
+        exit
+      fi
+    fi
 }
 # Reset data to the last update
 fix() {
@@ -58,6 +93,7 @@ fix() {
 # autolauncher
 autolaunch() {
   while true ; do
+    sudo service redis-server start
     for tablighgar in bot-*.lua ; do
       tab="${tablighgar%.*}"
       ltab="${tab/-/ }"
@@ -68,15 +104,39 @@ autolaunch() {
       TMUX= tmux new-session -d -s $tab "./$ltab"
       tmux detach -s $tab
     done
-    printf '\n\e[1;32mربات ها راه اندازی شدند << \e[1;34m|Naji| \e[1;32m>> Bots are Running\n\e[0;39;49m'
-    sleep 1800
+    echo -e " \n\e[1;32mربات ها راه اندازی شدند << \e[1;34m| Naji |\e[1;32m>> Bots are Running\n\e[0;39;49m"
+    sleep 1200
   done 
+}
+# clear a bot
+clear() {
+  sudo service redis-server start
+  prtgrn '
+       : شماره شناسه تبلیغ‌گری که می‌خواهید پاک کنید را وارد کنید  <<
+  >> Inter the BOT-ID,that you wanna delete :
+'
+  read -rp ' ' ID
+    if [[ -e bot-"$ID".lua ]] ; then
+      rm -rf ~/.telegram-cli/bot-"$ID"/data
+      rm -rf bot-"$ID".lua
+      redis-cli --raw keys "bot"$ID* | xargs redis-cli del
+      prtgrn '
+     ربات شماره '$ID' با موفقیت حذف شد <<
+  >> Bot number '$ID' seccessfuly deleted.
+'
+    else
+      prtred "
+      هیچ رباتی با این شماره وجود ندارد <<
+  >> There is no bot with this BOT-ID.
+      "
+    fi
+  exit
 }
 # install Bot
 install() {
   prtgrn '
-         آیا قصد نصب پیش نیاز های ربات تبلیغگر را دارید؟ بله|خیر <<
-  >> Do you want to install Essentials of Tabchi bot? (Y/N):
+         آیا قصد نصب پیش نیاز های ربات تبلیغ‌گر را دارید؟ بله|خیر <<
+  >> Do you want to install Essentials of Bot? (Y/N):
 '
   read -rp ' ' install
   case "$install" in
@@ -110,15 +170,15 @@ install() {
 "
       sudo service redis-server restart
       prtgrn '
-      همگام سازی با جدیدترین نسخه تبلیغگر << 
+      همگام سازی با جدیدترین نسخه تبلیغ‌گر << 
  >> Fetching latest Bot source code
  '
       git pull
       prtgrn '
-      نصب پیش نیاز های ربات تبلیغگر با موفقیت انجام شد << 
+      نصب پیش نیاز های ربات تبلیغ‌گر با موفقیت انجام شد << 
  >> Essentials of Tablighgar Bot successfully installed!
  '
-      printf '\e[1;33mبسازید\e[1;32m ./bot create \e[1;33mربات تبلیغگر خود را با دستور <<\e[1;33m%s\n >>Create Your bot with\e[1;32m ./bot create\e[0;39;49m%s\n'
+      printf '\e[1;33mبسازید\e[1;32m ./bot create \e[1;33mربات تبلیغ‌گر خود را با دستور <<\e[1;33m%s\n >>Create Your bot with\e[1;32m ./bot create\e[0;39;49m%s\n'
     ;;
     N|n|خیر)
       prtbrown '
@@ -143,17 +203,23 @@ printf "\e[1;36m"
                     $0 [موارد استفاده  : [گزینه ها <<
                                         : گزینه ها
         شماره             راه اندازی ربات با این شماره 
+  راه‌اندازی انتی کرش ربات‌با‌این‌شماره            aشماره
    بازیابی اطلاعات از اخرین بروزرسانی             fix
-    نصب پیش نیاز های ربات تبلیغ گر           install
+    نصب پیش نیاز های ربات تبلیغ‌گر           install
       بروزرسانی به آخرین نسخه ربات            update
                  ساخت ربات جدید           create
-                  نمایش این متن             help
+       ساخت ربات جدید بصورت دستی        createmanual
+                   نمایش این متن            help
+   راه‌اندازی تمام ربات ها هر 20 دقیقه          autolaunch
                   
 >> Usage: $0 [options]
     Options:
-      unmber            Start bot whit this ID number
-      install           Install of Tabchi Bot
-      create            Create a new Tabchi Bot
+      createmanual      Create a new Bot manually
+      autolaunch        Launch all bots every 20 mins
+      NUMBER            Start bot whit this ID number
+      aNUMBER           Start bot whit this ID number in anticrash mod
+      install           Install of Bot
+      create            Create a new Bot
       update            Update bot source code
       help              Print this message
       fix               Reseting data
@@ -163,7 +229,6 @@ printf "%s\n\e[0;39;49m"
 ## MAIN ------------------------------------------------------------------------
 # Make sure this script run inside Bot directory
 cd "$THIS_DIR" || exit
-
 case $1 in
   update)
     update
@@ -183,13 +248,32 @@ case $1 in
   help)
     usage
   ;;
-  *)
-  if [ -a "$THIS_DIR"/bot-"$1".lua ]; then
-    while true; do
-      ./telegram-cli -p bot-"$1" -s bot-"$1".lua
-    done
+  createmanual)
+    createmanual
+  ;;
+  a*)
+    sudo service redis-server start
+    id="${1/a/}"
+    if [ -a "$THIS_DIR"/bot-"$id".lua ]; then
+      screen -X -S bot-"$id" quit
+      while true ; do
+        screen -S bot-"$id" ./telegram-cli -p bot-"$id" -s bot-"$id".lua
+        sleep 10
+      done
     else
       usage
-  fi
+    fi
+  ;;
+  clr)
+    clear
+  ;;
+  *)
+    if [ -a "$THIS_DIR"/bot-"$1".lua ]; then
+      sudo service redis-server start
+      screen -X -S bot-"$1" quit
+      screen -S bot-"$1" ./telegram-cli -p bot-"$1" -s bot-"$1".lua
+    else
+    usage
+    fi
   ;;
 esac
