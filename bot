@@ -93,7 +93,6 @@ fix() {
 # autolauncher
 autolaunch() {
   while true ; do
-    sudo service redis-server start
     for tablighgar in bot-*.lua ; do
       tab="${tablighgar%.*}"
       ltab="${tab/-/ }"
@@ -116,20 +115,13 @@ clear() {
   >> Inter the BOT-ID,that you wanna delete :
 '
   read -rp ' ' ID
-    if [[ -e bot-"$ID".lua ]] ; then
-      rm -rf ~/.telegram-cli/bot-"$ID"/data
-      rm -rf bot-"$ID".lua
-      redis-cli --raw keys "bot"$ID* | xargs redis-cli del
-      prtgrn '
+  rm -rf ~/.telegram-cli/bot-"$ID"/data
+  rm -rf bot-"$ID".lua
+  redis-cli --raw keys "bot"$ID* | xargs redis-cli del
+  prtgrn '
      ربات شماره '$ID' با موفقیت حذف شد <<
   >> Bot number '$ID' seccessfuly deleted.
 '
-    else
-      prtred "
-      هیچ رباتی با این شماره وجود ندارد <<
-  >> There is no bot with this BOT-ID.
-      "
-    fi
   exit
 }
 # install Bot
@@ -252,12 +244,11 @@ case $1 in
     createmanual
   ;;
   a*)
-    sudo service redis-server start
     id="${1/a/}"
     if [ -a "$THIS_DIR"/bot-"$id".lua ]; then
-      screen -X -S bot-"$id" quit
+      screen -x -s bot-"$id" quit
       while true ; do
-        screen -S bot-"$id" ./telegram-cli -p bot-"$id" -s bot-"$id".lua
+        screen -s bot-"$id" ./telegram-cli -p bot-"$id" -s bot-"$id".lua
         sleep 10
       done
     else
@@ -269,9 +260,7 @@ case $1 in
   ;;
   *)
     if [ -a "$THIS_DIR"/bot-"$1".lua ]; then
-      sudo service redis-server start
-      screen -X -S bot-"$1" quit
-      screen -S bot-"$1" ./telegram-cli -p bot-"$1" -s bot-"$1".lua
+      ./telegram-cli -p bot-"$1" -s bot-"$1".lua
     else
     usage
     fi
