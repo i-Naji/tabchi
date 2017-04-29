@@ -263,6 +263,15 @@ function tdcli_update_callback(data)
 						redis:set("botBOT-IDsavecontacts", true)
 						return send(msg.chat_id_, msg.id_, "فرایند افزودن خودکار مخاطبین به اشتراک  گذاشته شده فعال شد.")
 					end
+				elseif text:match("^(محدودیت عضو گروه)  (%d+)S") then
+					local matches = text:match("%d+")
+					if redis:del("botBOT-IDjoinlimit', matches) then
+						return send (msg.chat_id_, msg.id_, "<i>محدودی عضویت تنظیم شد.</i>")
+					else
+						redis:sadd('botBOT-IDadmin',matches)
+					end
+						
+					if
 				elseif text:match("^(افزودن مدیر) (%d+)$") then
 					local matches = text:match("%d+")
 					if redis:sismember('botBOT-IDadmin', matches) then
