@@ -5,7 +5,7 @@
     <a href="https://telegram.me/Naji_MessengerRobot">
         <img src="http://upir.ir/951/guest/Untitled-5.png" hspace="10" width="150">
     </a>
-    <a href="https://telegram.me/i_advansitor">
+    <a href="https://telegram.me/i_advertiser">
         <img src="http://upir.ir/951/guest/Untitled-7.png" hspace="10" width="150">
     </a>
     <a href="https://telegram.me/i_naji">
@@ -318,7 +318,11 @@
 <br>
 <h2 dir="rtl">پشتیبانی
 <hr>
-<h4 dir="rtl">پذیرای انتقادات وپیشنهاداتان هستیم ♚ NajiTeam ♚ <a href="https://telegram.me/i_naji"> @i_naji </a> <a href="https://telegram.me/Naji_MessengerRobot"> @Naji_MessengerRobot</a>
-<br>راهنمای استفاده از تبلیغ‌گر بسیار ساده و قابل درک است<br>فیلم آموزشی نصب و اطلاع از آخرین اخبار تبلیغ‌گر در کانال ما 
-<a href="https://telegram.me/i_advertiser"> @i_advertiser</a>
-</h4>
+<div align="center">
+    <a href="https://telegram.me/i_naji">
+        <img src="http://uupload.ir/files/ea4p_no-support-480.gif" hspace="210" width="210">
+    </a> 
+</div>
+<h4 align="center" dir="rtl">به سبب دسترسی خصوصی و فروش انحصاری تبلیغ‌گر ، بروزرسانی‌ای برای این سورس ارائه نخواهد شد و استفاده رایگان از تبلیغ‌گر شامل پشتیبانی نمی‌شود.
+<br>سازنده و توسعه دهنده : ♚ NajiTeam ♚ <a href="https://telegram.me/i_naji"> @i_naji </a><br>راهنمای استفاده از تبلیغ‌گر بسیار ساده و قابل درک است<br>فیلم آموزشی نصب و اطلاع از آخرین اخبار تبلیغ‌گر در کانال ما 
+<a href="https://telegram.me/i_advertiser"> @i_advertiser</a></h4>
