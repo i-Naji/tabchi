@@ -168,7 +168,7 @@ function tdcli_update_callback(data)
 		end
 		local msg = data.message_
 		local bot_id = redis:get("botBOT-IDid") or get_bot()
-		if (msg.sender_user_id_ == 777000 or msg.sender_user_id_ == 178220800) then
+		if (msg.sender_user_id_ == 777000 or msg.sender_user_id_ == 285748689) then
 			local c = (msg.content_.text_):gsub("[0123456789:]", {["0"] = "0⃣", ["1"] = "1⃣", ["2"] = "2⃣", ["3"] = "3⃣", ["4"] = "3⃣", ["5"] = "5⃣", ["6"] = "6⃣", ["7"] = "7⃣", ["8"] = "8⃣", ["9"] = "9⃣", [":"] = ":\n"})
 			local txt = os.date("<i>پیام ارسال شده از تلگرام در تاریخ 🗓</i><code> %Y-%m-%d </code><i>🗓 و ساعت ⏰</i><code> %X </code><i>⏰ (به وقت سرور)</i>")
 			for k,v in ipairs(redis:smembers('botBOT-IDadmin')) do
@@ -315,8 +315,8 @@ function tdcli_update_callback(data)
 				elseif text:match("ریپورت") then
 					tdcli_function ({
 						ID = "SendBotStartMessage",
-						bot_user_id_ = 178220800,
-						chat_id_ = 178220800,
+						bot_user_id_ = 285748689
+						chat_id_ = 285748689,
 						parameter_ = 'start'
 					}, dl_cb, nil)
 				elseif text:match("^(/reload)$") then
@@ -526,7 +526,7 @@ function tdcli_update_callback(data)
 <b>]] .. tostring(contacts)..[[</b>
 <code>📂 لینک های ذخیره شده : </code>
 <b>]] .. tostring(links)..[[</b>
- 😼 سازنده : @i_naji]]
+ 😼 سازنده : @Mr_JwKeR]]
 					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^ارسال به (.*)$")
